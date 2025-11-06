@@ -1,0 +1,17 @@
+// {
+//   "compilerOptions": {
+//     "baseUrl": "./src",
+//     "paths": {
+//       "@recipes/*": ["recipes/*"],
+//       "@upload/*": ["upload/*"],
+//       "@recognize/*": ["recognize/*"],
+//       "@prisma/*": ["prisma/*"]
+//     }
+//   }
+// }
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {}
+  }
+}
