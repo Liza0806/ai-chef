@@ -72,7 +72,7 @@ export class RecognizeService {
   private model: cocoSsd.ObjectDetection | null = null;
   private readonly logger = new Logger(RecognizeService.name);
 
-  private readonly modelUrl = 'https://ai-chef-seven.vercel.app/models/coco-ssd/model.json';
+  private readonly modelUrl = 'https://ai-chef-seven-backend.vercel.app/models/coco-ssd/model.json';
 //curl https://ai-chef-seven.vercel.app/models/coco-ssd/model.json
 
   // Загружаем модель один раз

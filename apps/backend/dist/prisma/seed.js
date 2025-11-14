@@ -40,7 +40,10 @@ async function main() {
     console.log('✅ Seed finished', { user, omelet });
 }
 main()
-    .catch(e => console.error(e))
+    .catch(e => {
+    console.error(e);
+    process.exit(1);
+})
     .finally(async () => {
     await prisma.$disconnect();
 });
