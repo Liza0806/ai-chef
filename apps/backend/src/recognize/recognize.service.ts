@@ -73,6 +73,7 @@ export class RecognizeService {
   private readonly logger = new Logger(RecognizeService.name);
 
   private readonly modelUrl = 'https://ai-chef-seven.vercel.app/models/coco-ssd/model.json';
+//curl https://ai-chef-seven.vercel.app/models/coco-ssd/model.json
 
   // Загружаем модель один раз
   async loadModel() {
