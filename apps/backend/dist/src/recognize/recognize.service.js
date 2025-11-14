@@ -38,9 +38,6 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -48,55 +45,51 @@ var RecognizeService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RecognizeService = void 0;
 const tf = __importStar(require("@tensorflow/tfjs"));
-const cocoSsd = __importStar(require("@tensorflow-models/coco-ssd"));
-const common_1 = require("@nestjs/common");
-const path_1 = __importDefault(require("path"));
-const fs = __importStar(require("fs"));
 const canvas_1 = require("@napi-rs/canvas");
-const prisma_service_1 = require("../prisma/prisma.service");
+const common_1 = require("@nestjs/common");
+const cocoSsd = __importStar(require("@tensorflow-models/coco-ssd"));
+const fs = __importStar(require("fs"));
+const path_1 = __importDefault(require("path"));
+const fetch = (...args) => Promise.resolve().then(() => __importStar(require("node-fetch"))).then(({ default: fetch }) => fetch(...args));
+if (!globalThis.fetch) {
+    globalThis.fetch = fetch;
+}
 let RecognizeService = RecognizeService_1 = class RecognizeService {
-    constructor(prisma) {
-        this.prisma = prisma;
+    constructor() {
         this.model = null;
         this.logger = new common_1.Logger(RecognizeService_1.name);
-        this.modelPath = path_1.default.resolve('./models/coco-ssd/model.json');
-        console.log('🔹 RecognizeService создан');
-        console.log('RecognizeService инициализирован, prisma:', this.prisma ? '✅ есть' : '❌ undefined');
+        this.modelPath = path_1.default.resolve('./src/models/coco-ssd/model.json');
     }
-    // Загружаем модель один раз
     async loadModel() {
         if (!this.model) {
             if (!fs.existsSync(this.modelPath)) {
-                throw new Error(`Модель не найдена по пути ${this.modelPath}. Скачай её сначала.`);
+                throw new Error(`Модель не найдена по пути ${this.modelPath}`);
             }
-            this.logger.log('Загрузка локальной COCO-SSD модели...');
+            this.logger.log('Загрузка модели...');
             this.model = await cocoSsd.load({
-                modelUrl: `file://${this.modelPath}`,
                 base: 'lite_mobilenet_v2',
+                modelUrl: `file://${this.modelPath}`,
             });
-            this.logger.log('Локальная COCO-SSD модель загружена');
+            this.logger.log('Модель загружена ✅');
         }
         return this.model;
     }
     async recognize(imageBuffer) {
         const model = await this.loadModel();
-        // Загружаем изображение через canvas
-        const img = await (0, canvas_1.loadImage)(imageBuffer);
+        const img = await (0, canvas_1.loadImage)(`data:image/jpeg;base64,${imageBuffer.toString('base64')}`);
         const canvas = (0, canvas_1.createCanvas)(img.width, img.height);
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0);
-        //@ts-ignore
-        // Преобразуем в Tensor3D (RGB)
-        let imageTensor = tf.browser.fromPixels(canvas);
-        // Получаем предсказания
-        const predictions = await model.detect(imageTensor);
-        // Освобождаем память
+        const imageData = ctx.getImageData(0, 0, img.width, img.height);
+        const imageTensor = tf.tensor3d(new Uint8Array(imageData.data), [img.height, img.width, 4], 'int32');
+        const rgbTensor = imageTensor.slice([0, 0, 0], [-1, -1, 3]);
+        const predictions = await model.detect(rgbTensor);
         imageTensor.dispose();
+        rgbTensor.dispose();
         return predictions;
     }
 };
 exports.RecognizeService = RecognizeService;
 exports.RecognizeService = RecognizeService = RecognizeService_1 = __decorate([
-    (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    (0, common_1.Injectable)()
 ], RecognizeService);

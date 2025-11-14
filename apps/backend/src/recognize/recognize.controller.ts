@@ -2,6 +2,10 @@ import { Controller, Get, Query, Post, UploadedFile, UseInterceptors } from '@ne
 import { FileInterceptor } from '@nestjs/platform-express';
 import { RecognizeService } from './recognize.service';
 import { ModuleRef } from '@nestjs/core';
+import { error } from 'console';
+import * as multer from 'multer';
+
+
 @Controller('recognize')
 export class RecognizeController {
   
@@ -28,17 +32,21 @@ export class RecognizeController {
   // POST для распознавания изображений
   @Post()
   
-  @UseInterceptors(FileInterceptor('image')) // 'image' — имя поля формы
+ // @UseInterceptors(FileInterceptor('image')) // 'image' — имя поля формы
+ @UseInterceptors(FileInterceptor('image', {
+  storage: multer.memoryStorage(),
+}))
   async recognize(@UploadedFile() file: Express.Multer.File) {
     
-    console.log('✅ Метод recognize() вызван');
+    console.log('✅ Метод recognize() вызван. файл -', file);
   
 
     if (!file) {
+      console.log(error)
       return { error: 'No file uploaded' };
     }
 
-    try {
+    try { /// тут уже не идет, так как файл андефайнд
       console.log('Файл получен:', file.originalname, file.mimetype, file.size);
       const predictions = await this.recognizeService.recognize(file.buffer); //////////тут проблема!!!
       console.log('Предсказания:', predictions);

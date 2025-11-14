@@ -13,10 +13,9 @@ let PrismaModule = class PrismaModule {
 };
 exports.PrismaModule = PrismaModule;
 exports.PrismaModule = PrismaModule = __decorate([
-    (0, common_1.Global)() // 👈 делает модуль доступным во всем приложении без явного импорта
-    ,
+    (0, common_1.Global)(),
     (0, common_1.Module)({
         providers: [prisma_service_1.PrismaService],
-        exports: [prisma_service_1.PrismaService], // 👈 экспортируем, чтобы другие модули могли использовать
+        exports: [prisma_service_1.PrismaService],
     })
 ], PrismaModule);

@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 async function main() {
-    // Создаём ингредиенты
     const eggs = await prisma.ingredient.upsert({
         where: { name: 'eggs' },
         update: {},
@@ -14,7 +13,6 @@ async function main() {
         update: {},
         create: { name: 'cheese' },
     });
-    // Создаём рецепт
     const omelet = await prisma.recipe.create({
         data: {
             title: 'Омлет с сыром',
@@ -27,7 +25,6 @@ async function main() {
             },
         },
     });
-    // Создаём пользователя
     const user = await prisma.user.create({
         data: {
             name: 'Test User',

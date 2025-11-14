@@ -21,23 +21,30 @@ export class UploadController {
       storage: diskStorage({
         destination: './uploads',
         filename: (req, file, cb) => {
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-          cb(null, `${uniqueSuffix}${extname(file.originalname)}`);
+                    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+                   const extension = extname(file.originalname); // ✅ получаем расширение, включая точку (.jpg)
+          cb(null, `${uniqueSuffix}${extension}`); 
+          console.log("сделали файлу имя")
         },
       }),
     }),
   )
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    if (!file) throw new BadRequestException('Файл не загружен');
+    if (!file){ 
+           console.log("файл не загружен в аплоад файл")
+      throw new BadRequestException('Файл не загружен')};
 
     try {
       const result = await this.uploadService.processFile(file.path);
+           console.log("загрузили, вот результат:", result)
       return { success: true, result };
-    } finally {
-      // Контроллер отвечает за удаление файла
-      fs.unlink(file.path, (err) => {
-        if (err) console.error('Не удалось удалить файл:', err);
-      });
+    }
+     finally {
+      console.log("finally в аплоад")
+      // // Контроллер отвечает за удаление файла
+      // fs.unlink(file.path, (err) => {
+      //   if (err) console.error('Не удалось удалить файл:', err);
+      // });
     }
   }
 }

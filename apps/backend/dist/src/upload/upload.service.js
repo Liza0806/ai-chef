@@ -54,10 +54,7 @@ let UploadService = UploadService_1 = class UploadService {
     }
     async processFile(filePath) {
         try {
-            // 👉 Передаём путь в сервис распознавания
-            // 🔹 читаем файл в буфер
             const imageBuffer = await fs.readFile(filePath);
-            // 🔹 передаём буфер в сервис распознавания
             const result = await this.recognizeService.recognize(imageBuffer);
             return {
                 message: 'Файл успешно распознан',

@@ -33,8 +33,6 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], RecipesController.prototype, "getRecipes", null);
 exports.RecipesController = RecipesController = __decorate([
-    (0, common_1.Controller)('recipes') // все роуты начинаются с /recipes
-    ,
+    (0, common_1.Controller)('recipes'),
     __metadata("design:paramtypes", [recipes_service_1.RecipesService])
 ], RecipesController);
-//export default RecipesController;

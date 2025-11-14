@@ -25,7 +25,7 @@ exports.RecognizeModule = RecognizeModule;
 exports.RecognizeModule = RecognizeModule = __decorate([
     (0, common_1.Module)({
         imports: [prisma_module_1.PrismaModule,
-            platform_express_1.MulterModule.register({ dest: './uploads' }) // нужно для @UploadedFile
+            platform_express_1.MulterModule.register({ dest: './uploads' })
         ],
         controllers: [recognize_controller_1.RecognizeController],
         providers: [recognize_service_1.RecognizeService, prisma_service_1.PrismaService],
