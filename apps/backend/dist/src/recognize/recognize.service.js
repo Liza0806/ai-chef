@@ -48,7 +48,7 @@ let RecognizeService = RecognizeService_1 = class RecognizeService {
     constructor() {
         this.model = null;
         this.logger = new common_1.Logger(RecognizeService_1.name);
-        this.modelUrl = 'https://ai-chef-seven/models/coco-ssd/model.json';
+        this.modelUrl = 'https://ai-chef-seven.vercel.app/models/coco-ssd/model.json';
     }
     async loadModel() {
         if (!this.model) {
