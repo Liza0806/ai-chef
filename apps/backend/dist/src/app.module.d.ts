@@ -6,3 +6,5 @@ export declare class RecognizeService {
     loadModel(): Promise<cocoSsd.ObjectDetection>;
     recognize(imageBuffer: Buffer): Promise<cocoSsd.DetectedObject[]>;
 }
+export declare class AppModule {
+}

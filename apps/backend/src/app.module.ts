@@ -70,3 +70,4 @@ export class RecognizeService {
     return predictions;
   }
 }
+export class AppModule {}

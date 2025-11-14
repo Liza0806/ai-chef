@@ -40,7 +40,7 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 var RecognizeService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RecognizeService = void 0;
+exports.AppModule = exports.RecognizeService = void 0;
 const common_1 = require("@nestjs/common");
 const tf = __importStar(require("@tensorflow/tfjs"));
 const cocoSsd = __importStar(require("@tensorflow-models/coco-ssd"));
@@ -78,3 +78,6 @@ exports.RecognizeService = RecognizeService;
 exports.RecognizeService = RecognizeService = RecognizeService_1 = __decorate([
     (0, common_1.Injectable)()
 ], RecognizeService);
+class AppModule {
+}
+exports.AppModule = AppModule;
