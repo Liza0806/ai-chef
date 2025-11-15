@@ -36,8 +36,9 @@ import { AppModule } from './app.module';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import express from 'express';
 import path from 'path';
+import type { Express } from 'express';
 
-const server = express();
+const server: Express = express();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
