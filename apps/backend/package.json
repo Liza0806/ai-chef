@@ -8,7 +8,7 @@
     "download:model": "node scripts/download-coco-ssd.js",
     "start": "nest start",
     "start:nest": "nest start --watch",
-    "build": "nest build && npm run copy-models",
+  "build": "pnpm nest build && pnpm copy-models",
     "lint": "nest lint",
     "nest": "nest",
     "copy-models": "copyfiles -u 1 src/models/**/* dist/models",
