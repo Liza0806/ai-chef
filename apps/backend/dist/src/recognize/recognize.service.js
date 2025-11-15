@@ -54,7 +54,7 @@ let RecognizeService = RecognizeService_1 = class RecognizeService {
         if (!this.model) {
             this.logger.log('Загрузка модели...');
             this.model = await cocoSsd.load({
-                modelUrl: 'https://<твоя-vercel-ссылка>/models/coco-ssd/model.json',
+                modelUrl: 'https://ai-chef-backend/models/coco-ssd/model.json',
             });
             this.logger.log('Модель загружена');
         }

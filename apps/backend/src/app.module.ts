@@ -20,7 +20,7 @@ import { join } from "path";
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, "../public"), // путь к src/models после сборки
+      rootPath: join(__dirname, "../../public/models"), // путь к src/models после сборки
       serveRoot: "/", // URL: http://localhost:3000/models/...
     }),
     RecognizeModule,
