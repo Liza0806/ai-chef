@@ -3,7 +3,7 @@ import { RecognizeController } from './recognize.controller';
 import {RecognizeService} from './recognize.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { MulterModule } from '@nestjs/platform-express';
-import { PrismaModule } from '@prisma/prisma.module';
+import  { PrismaModule } from "../prisma/prisma.module" ;
 
 
 @Module({
