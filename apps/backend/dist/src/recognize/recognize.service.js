@@ -42,35 +42,32 @@ var RecognizeService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RecognizeService = void 0;
 const common_1 = require("@nestjs/common");
-const tf = __importStar(require("@tensorflow/tfjs"));
 const cocoSsd = __importStar(require("@tensorflow-models/coco-ssd"));
+const tf = __importStar(require("@tensorflow/tfjs"));
+const canvas_1 = require("@napi-rs/canvas");
 let RecognizeService = RecognizeService_1 = class RecognizeService {
     constructor() {
         this.model = null;
         this.logger = new common_1.Logger(RecognizeService_1.name);
-        this.modelUrl = 'https://ai-chef-seven-backend.vercel.app/models/coco-ssd/model.json';
     }
     async loadModel() {
         if (!this.model) {
-            this.logger.log('Загрузка COCO-SSD модели по URL...');
+            this.logger.log('Загрузка модели...');
             this.model = await cocoSsd.load({
-                modelUrl: this.modelUrl,
-                base: 'lite_mobilenet_v2',
+                modelUrl: 'https://<твоя-vercel-ссылка>/models/coco-ssd/model.json',
             });
             this.logger.log('Модель загружена');
         }
-        return this.model;
     }
-    async recognize(imageBuffer) {
-        const model = await this.loadModel();
-        const { createCanvas, loadImage } = await Promise.resolve().then(() => __importStar(require('@napi-rs/canvas')));
-        const img = await loadImage(imageBuffer);
-        const canvas = createCanvas(img.width, img.height);
+    async recognize(buffer) {
+        await this.loadModel();
+        const img = await (0, canvas_1.loadImage)(buffer);
+        const canvas = (0, canvas_1.createCanvas)(img.width, img.height);
         const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0);
-        const imageTensor = tf.browser.fromPixels(canvas);
-        const predictions = await model.detect(imageTensor);
-        imageTensor.dispose();
+        ctx.drawImage(img, 0, 0, img.width, img.height);
+        const input = tf.browser.fromPixels(canvas);
+        const predictions = await this.model.detect(input);
+        input.dispose();
         return predictions;
     }
 };

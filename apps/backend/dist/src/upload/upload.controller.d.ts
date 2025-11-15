@@ -1,12 +1,16 @@
-import { UploadService } from './upload.service';
+import { RecognizeService } from '../recognize/recognize.service';
 export declare class UploadController {
-    private readonly uploadService;
-    constructor(uploadService: UploadService);
+    private readonly recognizeService;
+    constructor(recognizeService: RecognizeService);
     uploadFile(file: Express.Multer.File): Promise<{
         success: boolean;
-        result: {
-            message: string;
-            data: import("@tensorflow-models/coco-ssd").DetectedObject[];
-        };
+        predictions: import("@tensorflow-models/coco-ssd").DetectedObject[];
+        error?: undefined;
+        details?: undefined;
+    } | {
+        error: string;
+        details: any;
+        success?: undefined;
+        predictions?: undefined;
     }>;
 }

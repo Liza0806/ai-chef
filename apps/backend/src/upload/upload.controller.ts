@@ -6,45 +6,37 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
+import { RecognizeService } from '../recognize/recognize.service';
 import { extname } from 'path';
-import * as fs from 'fs';
-import { UploadService } from './upload.service';
+import * as multer from 'multer';
 
 @Controller('upload')
 export class UploadController {
-  constructor(private readonly uploadService: UploadService) {}
+  constructor(private readonly recognizeService: RecognizeService) {}
 
   @Post()
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './uploads',
-        filename: (req, file, cb) => {
-                    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-                   const extension = extname(file.originalname); // ✅ получаем расширение, включая точку (.jpg)
-          cb(null, `${uniqueSuffix}${extension}`); 
-          console.log("сделали файлу имя")
-        },
-      }),
+      storage: multer.memoryStorage(),
+      limits: { fileSize: 5 * 1024 * 1024 }, // лимит 5 МБ
     }),
   )
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    if (!file){ 
-           console.log("файл не загружен в аплоад файл")
-      throw new BadRequestException('Файл не загружен')};
+    if (!file) {
+      throw new BadRequestException('Файл не загружен');
+    }
 
     try {
-      const result = await this.uploadService.processFile(file.path);
-           console.log("загрузили, вот результат:", result)
-      return { success: true, result };
-    }
-     finally {
-      console.log("finally в аплоад")
-      // // Контроллер отвечает за удаление файла
-      // fs.unlink(file.path, (err) => {
-      //   if (err) console.error('Не удалось удалить файл:', err);
-      // });
+      console.log('Файл получен:', file.originalname, file.size);
+
+      // передаем буфер прямо в сервис распознавания
+      const predictions = await this.recognizeService.recognize(file.buffer);
+
+      return { success: true, predictions };
+    } catch (err) {
+      console.error('Ошибка распознавания:', err);
+      //@ts-ignore
+      return { error: 'Internal server error', details: err.message };
     }
   }
 }
